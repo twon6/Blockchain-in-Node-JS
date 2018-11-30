@@ -33,7 +33,7 @@ const BrewChain = function() {
 	}
 
 	function createTree (data){
-        let leaves = [data.toString()].map(x => this.sha256(x));
+        let leaves = [data.toString()].map(x => Crypto.createHash('sha256').update(x).digest('hex'));
         var tree = new MerkleTree(leaves, "sha256");
         const root = tree.getRoot();
     
