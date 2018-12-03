@@ -25,3 +25,5 @@ Then create a block with the line below
 	3009 is the host and data is any value
 
 I created a block on host 3009 and the block will also be displayed on host 3006
+
+If you are trying to connect 3 or more node you need to connect each node to each other similar to a star topology. 

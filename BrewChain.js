@@ -75,7 +75,6 @@ const BrewChain = function() {
 			JSON.stringify(newBlock.data), newBlock.index, newBlock.previousHash, newBlock.nonce);
 
 	 	newBlock = mineBlock(newBlock);
-		//newBlock = proofOfWork(newBlock);
 
 		return newBlock;
 	}
@@ -91,18 +90,6 @@ const BrewChain = function() {
 		console.log("Block mined: " + newBlock.hash);
 		return newBlock;
     };    
-
-	function proofOfWork(block){
-
-		while(true){
-			block.hash = createHash(block.timestamp, block.data, block.index, block.previousHash, block.nonce);
-			if(block.hash.slice(-3) === "000"){	
-				return block;
-			}else{
-				block.nonce++;
-			}
-		}
-	}
 
 	function getLatestBlock(){
 		return currentBlock;
@@ -128,10 +115,10 @@ const BrewChain = function() {
 		}else if (previousBlock.hash !== block.previousHash){
 			//The previous hash is incorrect
 			return false;
-		}//else if(!hashIsValid(block)){
+		}else if(!hashIsValid(block)){
 			//The hash isn't correct
-			//return false;
-		//}
+			return false;
+		}
 		
 		return true;
 	}	
@@ -166,6 +153,31 @@ const BrewChain = function() {
 
         return true;
 	}
+
+	//Loops through the chain comparing the hashes of the currentBlock and the previous 
+    //to make sure they match 
+	function isChainValid(){
+        for(let i = 1; i < this.chain.length; i++){
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i - 1];
+
+            //Recalculate the hash to make sure the data is the same
+            //And the data has not been changed
+            if(currentBlock.hash != currentBlock.calcHash())
+                return false;
+            
+            //Compares the hashes of the current and previous block
+            //making sure they are the same
+            if(currentBlock.prevHash !== previousBlock.hash)
+                return false;
+
+            let str = this.createTree(currentBlock.data)
+
+            if(str !== currentBlock.merkelRoot)
+                return false;
+        }
+        return true;
+    };
 
 	return {
 		init,
