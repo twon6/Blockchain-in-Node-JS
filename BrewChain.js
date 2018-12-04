@@ -6,12 +6,11 @@ const BrewChain = function() {
 	let currentBlock = {};
 	let genesisBlock = {};
 	let difficulty = 3;
-	//
 
 	function init(){
 		genesisBlock = { 
             index: 0
-		  , timestamp: 1511818270000
+		  , timestamp: new Date().getTime()
 		  , data: 'our genesis data'
 		  , previousHash: "-1"
 		  , nonce: 0
@@ -126,7 +125,7 @@ const BrewChain = function() {
 	function hashIsValid(block){
 		return (createHash(block.timestamp, JSON.stringify(block.data), block.index, block.previousHash, block.nonce) == block.hash);
 	}
-
+	
 	function checkNewChainIsValid(newChain){
 		//Is the first block the genesis block?
 		if(createHash(newChain[0]) !== genesisBlock.hash ){
@@ -152,6 +151,19 @@ const BrewChain = function() {
         }
 
         return true;
+	}
+
+	//Loops through chain counting the number of votes for a 
+	//given person. 
+	function countVotes(name){
+		let counter = 0;
+		for(let i = 1; i < chain.length; i++){
+			block = chain[i];
+
+			if(block.data == name)
+				counter++;
+		}
+		return counter;
 	}
 
 	//Loops through the chain comparing the hashes of the currentBlock and the previous 

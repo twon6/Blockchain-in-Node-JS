@@ -6,18 +6,14 @@ const BrewNode = function(port){
     let brewServer;
     let _port = port
     let chain = new BrewChain();
-    //
 
     const REQUEST_CHAIN = "REQUEST_CHAIN";
     const REQUEST_BLOCK = "REQUEST_BLOCK";
     const BLOCK = "BLOCK";
     const CHAIN = "CHAIN";
     
-    //Peers
     const peers = {}
-
-    //Counter for the peers
-    let counter = 0;
+    let numOfPeers = 0;
 
     function init(){
 
@@ -129,17 +125,13 @@ const BrewNode = function(port){
             blocks: chain.getTotalBlocks()
         }
     }
-    ///////////////////////////////////////////////////////////
-    //for(let id in peers)
-    //    peers[id].conn.send();
-
-
-    //////////////////////////////////////////////////////////
+    
     const addPeer = (host, port) => {
         let connection = new WebSocket(`ws://${host}:${port}`);
         
         //Adding peers
         peers[host] = connection;
+        numOfPeers++;
 
         connection.on('error', (error) =>{
             console.log(error);
