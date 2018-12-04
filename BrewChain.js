@@ -84,11 +84,24 @@ const BrewChain = function() {
             newBlock.nonce++;
 			newBlock.hash = createHash(newBlock.timestamp, JSON.stringify(newBlock.data), 
 				newBlock.index, newBlock.previousHash, newBlock.nonce);;
-        }
-
+		}
+		
 		console.log("Block mined: " + newBlock.hash);
 		return newBlock;
-    };    
+	};    
+	
+	//Loops through chain counting the number of votes for a 
+	//given person. 
+	function countVotes(name){
+		let counter = 0;
+		for(let i = 1; i < chain.length; i++){
+			block = chain[i];
+
+			if(block.data == name)
+				counter++;
+		}
+		return counter;
+	}
 
 	function getLatestBlock(){
 		return currentBlock;
@@ -151,19 +164,6 @@ const BrewChain = function() {
         }
 
         return true;
-	}
-
-	//Loops through chain counting the number of votes for a 
-	//given person. 
-	function countVotes(name){
-		let counter = 0;
-		for(let i = 1; i < chain.length; i++){
-			block = chain[i];
-
-			if(block.data == name)
-				counter++;
-		}
-		return counter;
 	}
 
 	//Loops through the chain comparing the hashes of the currentBlock and the previous 
